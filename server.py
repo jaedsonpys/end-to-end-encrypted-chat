@@ -1,4 +1,6 @@
 import socket
+from cryptography.fernet import Fernet
+from base64 import urlsafe_b64encode
 
 from util import generate_key, format_key
 
@@ -29,6 +31,9 @@ def main():
     message_secret = public_peer + secret
 
     print(f'- Encrypt key is: {format_key(message_secret)}')
+
+    key_bytes = message_secret.to_bytes(32, byteorder='little')
+    fernet = Fernet(urlsafe_b64encode(key_bytes))
 
 
 main()
