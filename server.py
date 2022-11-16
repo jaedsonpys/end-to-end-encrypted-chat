@@ -1,29 +1,9 @@
-import os
-import secrets
 import socket
 
-KEY_LENGTH = 128
+from .util import generate_key, format_key
+
 SERVER_HOST = '127.0.0.1'
 SERVER_PORT = 5500
-
-
-def format_key(key: str) -> str:
-    key_str = ''
-    count = 0
-
-    for i in str(key):
-        if count <= 3:
-            key_str += i
-            count += 1
-        else:
-            count = 0
-            key_str += ' '
-
-    return key_str.strip()
-
-
-def generate_key() -> int:
-    return secrets.randbits(KEY_LENGTH)
 
 
 def main():
