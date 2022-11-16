@@ -29,5 +29,22 @@ def main():
     key_bytes = message_secret.to_bytes(32, byteorder='little')
     fernet = Fernet(urlsafe_b64encode(key_bytes))
 
+    print('=' * 20)
+
+    try:
+        while True:        
+            message = input('message> ').strip()
+            encrypted_msg = fernet.encrypt(message.encode())
+            sock.send(encrypted_msg)
+            print('...')
+
+            # wait response
+            response = sock.recv(1024)
+            response_decrypted = fernet.decrypt(response)
+            print(f'server> {response_decrypted.decode()}')
+    except KeyboardInterrupt:
+        print('Bye.')
+        sock.close()
+
 
 main()

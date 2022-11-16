@@ -14,7 +14,7 @@ def main():
     sock.bind((SERVER_HOST, SERVER_PORT))
     sock.listen(5)
 
-    print(f'Running in {SERVER_HOST}:{SERVER_PORT}')
+    print(f'Running in {SERVER_HOST}:{SERVER_PORT}\n')
     print('- Wait connection...')
 
     client, __ = sock.accept()
@@ -30,10 +30,27 @@ def main():
     public_peer = int(client.recv(1024).decode())
     message_secret = public_peer + secret
 
-    print(f'- Encrypt key is: {format_key(message_secret)}')
+    print(f'- Encrypt key is: {format_key(message_secret)}\n')
 
     key_bytes = message_secret.to_bytes(32, byteorder='little')
     fernet = Fernet(urlsafe_b64encode(key_bytes))
+
+    print('=' * 20)
+
+    try:
+        while True:            
+            # wait response
+            client_msg = client.recv(1024)
+            client_msg_decrypted = fernet.decrypt(client_msg)
+            print(f'client> {client_msg_decrypted.decode()}')
+
+            message = input('message> ').strip()
+            encrypted_msg = fernet.encrypt(message.encode())
+            client.send(encrypted_msg)
+            print('...')
+    except KeyboardInterrupt:
+        print('Bye.')
+        sock.close()
 
 
 main()
