@@ -28,29 +28,24 @@ def generate_key() -> int:
 
 def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    response = input('Use socket as server? ').strip().lower()
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind((SERVER_HOST, SERVER_PORT))
+    sock.listen(5)
 
-    os.system('clear')
+    print(f'Running in {SERVER_HOST}:{SERVER_PORT}')
+    print('- Wait connection...')
 
-    if response in ('y', 's'):
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind((SERVER_HOST, SERVER_PORT))
-        sock.listen(5)
+    client, __ = sock.accept()
+    print('- Connected, performing key exchange...')
 
-        print(f'Running in {SERVER_HOST}:{SERVER_PORT}')
-        print('- Wait connection...')
+    # keys received and generated
+    common = int(client.recv(1024).decode())
+    secret = generate_key()
+    public = common + secret
 
-        client, __ = sock.accept()
-        print('- Connected, performing key exchange...')
+    # sending "public" key and waiting for peer's public key
+    client.send(str(public).encode())
+    public_peer = int(client.recv(1024).decode())
+    message_secret = public_peer + secret
 
-        # keys received and generated
-        common = int(client.recv(1024).decode())
-        secret = generate_key()
-        public = common + secret
-
-        # sending "public" key and waiting for peer's public key
-        client.send(str(public).encode())
-        public_peer = int(client.recv(1024).decode())
-        message_secret = public_peer + secret
-
-        print(f'- Encrypt key is: {format_key(message_secret)}')
+    print(f'- Encrypt key is: {format_key(message_secret)}')
