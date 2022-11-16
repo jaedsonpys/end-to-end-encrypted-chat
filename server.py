@@ -29,3 +29,6 @@ def main():
     message_secret = public_peer + secret
 
     print(f'- Encrypt key is: {format_key(message_secret)}')
+
+
+main()
