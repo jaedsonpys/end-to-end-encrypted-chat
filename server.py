@@ -1,6 +1,6 @@
 import socket
 
-from .util import generate_key, format_key
+from util import generate_key, format_key
 
 SERVER_HOST = '127.0.0.1'
 SERVER_PORT = 5500

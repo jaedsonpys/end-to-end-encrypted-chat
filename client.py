@@ -1,6 +1,6 @@
 import socket
 
-from .util import generate_key, format_key
+from util import generate_key, format_key
 
 
 def main():
