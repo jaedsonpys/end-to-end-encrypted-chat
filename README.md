@@ -1,4 +1,4 @@
-# End-to-end encrypt chat
+# End-to-end encrypted chat
 
 Simple Python chat using socket, **end-to-end encryption** and [Diffie Hellman key exchange](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange), which allows a *secure conversation* between the two participants.
 
